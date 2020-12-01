@@ -35,12 +35,8 @@ int main() {
     auto path = std::filesystem::path("../input/day1.txt");
     std::ifstream input{path.c_str()};
 
-    std::vector<int> numbers;
-
-    auto lines = lines_from_file(path);
-
-    std::transform(lines.begin(), lines.end(), std::back_inserter(numbers), [](const auto& str) {
-        return std::stoi(str);
+    std::vector<int> numbers = entries_from_file<int>(path, [](const auto& line) {
+        return std::stoi(line);
     });
 
     part_one(numbers);
