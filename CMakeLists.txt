@@ -24,3 +24,7 @@ target_link_libraries(daytwo aocutils)
 add_executable(daythree day3/main.cpp)
 include_directories(daythree aocutils)
 target_link_libraries(daythree aocutils)
+
+add_executable(dayfour day4/main.cpp)
+include_directories(dayfour aocutils)
+target_link_libraries(dayfour aocutils)
