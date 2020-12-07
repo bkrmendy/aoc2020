@@ -1,16 +1,16 @@
-#include <iostream>
 #include <filesystem>
 #include <fstream>
 #include <vector>
 #include <numeric>
-#include <utils.h>
+
+#include "utils.h"
+#include <fmt/core.h>
 
 void part_one(std::vector<int>& numbers) {
     for (const auto& left : numbers) {
         for (const auto &right : numbers) {
             if (left + right == 2020) {
-                std::cout << "Part one: " << std::endl;
-                std::cout << left * right << std::endl;
+                fmt::print("Part one: {}", left * right);
                 return;
             }
         }
@@ -22,8 +22,7 @@ void part_two(std::vector<int>& numbers) {
         for (const auto &middle : numbers) {
             for (const auto &right : numbers) {
                 if (left + middle + right == 2020) {
-                    std::cout << "Part two: " << std::endl;
-                    std::cout << left * middle * right << std::endl;
+                    fmt::print("Part two: {}", left * middle * right);
                     return;
                 }
             }

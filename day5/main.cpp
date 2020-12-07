@@ -7,7 +7,7 @@
 #include <vector>
 #include <set>
 #include <numeric>
-#include <utils.h>
+#include "../aocutils/utils.h"
 
 int partition_rows(size_t rows_min, size_t rows_max, std::string&& bsp) {
     if (bsp.size() == 1) {

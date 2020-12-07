@@ -9,7 +9,7 @@
 #include <utility>
 #include <numeric>
 
-#include "utils.h"
+#include "../aocutils/utils.h"
 
 struct Entry {
     int quantity;

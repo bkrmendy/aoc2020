@@ -5,7 +5,7 @@
 #include <filesystem>
 #include <numeric>
 #include <iostream>
-#include "utils.h"
+#include "../aocutils/utils.h"
 
 struct Rule {
     int lo;

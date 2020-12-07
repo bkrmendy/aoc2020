@@ -7,7 +7,7 @@
 #include <numeric>
 #include <iostream>
 
-#include "utils.h"
+#include "../aocutils/utils.h"
 
 
 std::set<char> intersection(std::vector<std::set<char>>& sets) {

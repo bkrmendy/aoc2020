@@ -3,7 +3,7 @@
 //
 
 #include <iostream>
-#include "utils.h"
+#include "../aocutils/utils.h"
 
 int traverse(const std::vector<std::string>& map, size_t step_right, size_t step_down) {
     const char tree = '#';
