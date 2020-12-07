@@ -13,7 +13,7 @@ int traverse(const std::vector<std::string>& map, size_t step_right, size_t step
 
     for (size_t i = 0; i < map.size(); i += step_down) {
         const auto& row = map.at(i);
-        if (row[(offset * step_right) % row.size()] == tree) {
+        if (row.at((offset * step_right) % row.size()) == tree) {
             trees = trees + 1;
         }
         offset = offset + 1;

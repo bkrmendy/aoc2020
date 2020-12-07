@@ -63,9 +63,7 @@ int main() {
                 passwords.end(),
                 0,
                 [](const int n_correct, const Rule& rule) {
-                    bool is_correct =
-                            (rule.password[rule.lo - 1] == rule.letter && rule.password[rule.hi - 1] != rule.letter)
-                            || (rule.password[rule.lo - 1] != rule.letter && rule.password[rule.hi - 1] == rule.letter);
+                    bool is_correct = (rule.password[rule.lo - 1] == rule.letter) ^ (rule.password[rule.hi - 1] == rule.letter);
 
                     return is_correct ? n_correct + 1 : n_correct;
                 });
