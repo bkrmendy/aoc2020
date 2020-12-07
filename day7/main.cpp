@@ -5,10 +5,10 @@
 #include <filesystem>
 #include <map>
 #include <set>
-#include <iostream>
 #include <utility>
 #include <numeric>
 
+#include <fmt/core.h>
 #include "../aocutils/utils.h"
 
 struct Entry {
@@ -78,7 +78,7 @@ int main() {
         }
     }
 
-    std::cout << "Part one: " << bags.size() << std::endl;
+    fmt::print("Part one: {}\n", bags.size());
 
     int shiny_contains = 0;
 
@@ -88,7 +88,7 @@ int main() {
         }
     }
 
-    std::cout << "Part two: " << shiny_contains << std::endl;
+    fmt::print("Part one: {}\n", shiny_contains);
 
     return 0;
 }

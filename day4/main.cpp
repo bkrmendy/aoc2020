@@ -2,12 +2,12 @@
 // Created by Berci on 2020. 12. 03..
 //
 
-#include <iostream>
 #include <map>
 #include <set>
 #include <numeric>
 
-#include "../aocutils/utils.h"
+#include <fmt/core.h>
+#include "utils.h"
 
 std::vector<std::map<std::string, std::string>> batches(std::vector<std::string>& lines) {
     std::vector<std::map<std::string, std::string>> passports{};
@@ -92,6 +92,6 @@ int main() {
                     return entry.find("pid")->second.size() == 9;
                 });
 
-    std::cout << "Part one: " << n_correct << std::endl;
+    fmt::print("Part one: {}\n", n_correct);
 }
 

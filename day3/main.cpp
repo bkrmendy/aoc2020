@@ -2,8 +2,8 @@
 // Created by Berci on 2020. 12. 02..
 //
 
-#include <iostream>
-#include "../aocutils/utils.h"
+#include <fmt/core.h>
+#include "utils.h"
 
 int traverse(const std::vector<std::string>& map, size_t step_right, size_t step_down) {
     const char tree = '#';
@@ -28,7 +28,7 @@ int main() {
 
     auto trees = traverse(lines, 3, 1);
 
-    std::cout << "Part one: " << trees << std::endl;
+    fmt::print("Part one: {}\n", trees);
 
     auto total_trees
         = traverse(lines, 1, 1)
@@ -37,6 +37,5 @@ int main() {
         * traverse(lines, 7, 1)
         * traverse(lines, 1, 2);
 
-    std::cout << "Part two: " << total_trees << std::endl;
-
+    fmt::print("Part one: {}\n", total_trees);
 }

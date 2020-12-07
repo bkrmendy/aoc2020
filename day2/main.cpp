@@ -4,8 +4,9 @@
 
 #include <filesystem>
 #include <numeric>
-#include <iostream>
-#include "../aocutils/utils.h"
+#include <fmt/core.h>
+
+#include "utils.h"
 
 struct Rule {
     int lo;
@@ -54,7 +55,7 @@ int main() {
                     return n_correct;
                 });
 
-    std::cout << "Part one: " << n_correct_passwords_part_one << std::endl;
+    fmt::print("Part one: {}\n", n_correct_passwords_part_one);
 
     int n_correct_passwords_part_two
         = std::reduce(
@@ -69,5 +70,5 @@ int main() {
                     return is_correct ? n_correct + 1 : n_correct;
                 });
 
-    std::cout << "Part two: " << n_correct_passwords_part_two << std::endl;
+    fmt::print("Part one: {}\n", n_correct_passwords_part_two);
 }

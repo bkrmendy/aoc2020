@@ -5,9 +5,9 @@
 #include <filesystem>
 #include <set>
 #include <numeric>
-#include <iostream>
 
-#include "../aocutils/utils.h"
+#include <fmt/core.h>
+#include "utils.h"
 
 
 std::set<char> intersection(std::vector<std::set<char>>& sets) {
@@ -65,5 +65,5 @@ int main() {
                     return acc + group.size();
                 });
 
-    std::cout << "Part two: " << n_answers << std::endl;
+    fmt::print("Part one: {}\n", n_answers);
 }

@@ -2,12 +2,13 @@
 // Created by Berci on 2020. 12. 04..
 //
 
-#include <iostream>
 #include <filesystem>
 #include <vector>
 #include <set>
 #include <numeric>
-#include "../aocutils/utils.h"
+
+#include <fmt/core.h>
+#include "utils.h"
 
 int partition_rows(size_t rows_min, size_t rows_max, std::string&& bsp) {
     if (bsp.size() == 1) {
@@ -74,7 +75,7 @@ void part_one(const std::vector<std::string>& lines) {
         max_id = std::max(max_id, this_id);
     });
 
-    std::cout << "Part one: " << max_id << std::endl;
+    fmt::print("Part one: {}\n", max_id);
 }
 
 int main() {
@@ -103,7 +104,7 @@ int main() {
 
     for (const auto& seat : seats) {
         if (!seats.contains(seat + 1) && seats.contains(seat + 2)) {
-            std::cout << "Part 2: " << seat + 1 << std::endl;
+            fmt::print("Part one: {}\n", seat + 1);
         }
     }
 

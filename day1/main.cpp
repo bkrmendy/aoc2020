@@ -10,7 +10,7 @@ void part_one(std::vector<int>& numbers) {
     for (const auto& left : numbers) {
         for (const auto &right : numbers) {
             if (left + right == 2020) {
-                fmt::print("Part one: {}", left * right);
+                fmt::print("Part one: {}\n", left * right);
                 return;
             }
         }
@@ -22,7 +22,7 @@ void part_two(std::vector<int>& numbers) {
         for (const auto &middle : numbers) {
             for (const auto &right : numbers) {
                 if (left + middle + right == 2020) {
-                    fmt::print("Part two: {}", left * middle * right);
+                    fmt::print("Part two: {}\n", left * middle * right);
                     return;
                 }
             }
