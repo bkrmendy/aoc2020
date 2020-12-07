@@ -7,7 +7,7 @@ set(CMAKE_CXX_STANDARD 20)
 # Tools
 # -----
 
-add_library(aocutils aocutils/utils.h aocutils/utils.cpp)
+add_library(aocutils aocutils/utils.h aocutils/utils.cpp day8/main.cpp)
 
 # ----------------
 # Daily challenges
@@ -40,3 +40,7 @@ target_link_libraries(daysix aocutils)
 add_executable(dayseven day7/main.cpp)
 include_directories(dayseven aocutils)
 target_link_libraries(dayseven aocutils)
+
+add_executable(dayeight day8/main.cpp)
+include_directories(dayeight aocutils)
+target_link_libraries(dayeight aocutils)
