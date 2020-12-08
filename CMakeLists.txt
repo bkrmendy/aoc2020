@@ -13,12 +13,11 @@ add_library(aocutils
         ${utils_src}
         aocutils/utils.h
         aocutils/utils.cpp
-        day8/main.cpp aocutils/overloaded.h)
+        aocutils/overloaded.h)
 
 target_link_libraries(aocutils fmt)
 
-# Macro for day
-
+# Macro for daily challenge executable
 function(Day day)
     add_executable(day${day} day${day}/main.cpp)
     include_directories(day${day} aocutils)
