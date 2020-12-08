@@ -22,13 +22,13 @@ class InfiniteLoopException : public std::exception {
 
 class AllModificationsDone : public std::exception {
     const char * what() const noexcept override {
-        return "Cannot modifiy program further!";
+        return "Cannot modify program further!";
     }
 };
 
 struct Instr {
-    OpCode opCode;
     int argument;
+    OpCode opCode;
     bool seen;
 
     Instr(const OpCode &opCode, int argument)
@@ -159,7 +159,7 @@ int main() {
             return Instr{OpCode::Nop, argument};
         }
 
-        assert(0 && "Unkown instruction");
+        assert(0 && "Unknown instruction");
     });
 
     fmt::print("Part one: {}\n", part_one(instructions));
