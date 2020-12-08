@@ -13,7 +13,7 @@ add_library(aocutils
         ${utils_src}
         aocutils/utils.h
         aocutils/utils.cpp
-        day8/main.cpp)
+        day8/main.cpp aocutils/overloaded.h)
 
 target_link_libraries(aocutils fmt)
 
