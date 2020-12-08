@@ -17,38 +17,26 @@ add_library(aocutils
 
 target_link_libraries(aocutils fmt)
 
+# Macro for day
+
+function(Day day)
+    add_executable(day${day} day${day}/main.cpp)
+    include_directories(day${day} aocutils)
+    target_link_libraries(day${day} aocutils)
+endfunction()
+
 # ----------------
 # Daily challenges
 # ----------------
 
-add_executable(dayone day1/main.cpp)
-include_directories(dayone aocutils)
-target_link_libraries(dayone aocutils)
+Day(1)
+Day(2)
+Day(3)
+Day(4)
+Day(5)
+Day(6)
+Day(7)
+Day(8)
+Day(9)
 
-add_executable(daytwo day2/main.cpp)
-include_directories(daytwo aocutils)
-target_link_libraries(daytwo aocutils)
 
-add_executable(daythree day3/main.cpp)
-include_directories(daythree aocutils)
-target_link_libraries(daythree aocutils)
-
-add_executable(dayfour day4/main.cpp)
-include_directories(dayfour aocutils)
-target_link_libraries(dayfour aocutils)
-
-add_executable(dayfive day5/main.cpp)
-include_directories(dayfive aocutils)
-target_link_libraries(dayfive aocutils)
-
-add_executable(daysix day6/main.cpp)
-include_directories(daysix aocutils)
-target_link_libraries(daysix aocutils)
-
-add_executable(dayseven day7/main.cpp)
-include_directories(dayseven aocutils)
-target_link_libraries(dayseven aocutils)
-
-add_executable(dayeight day8/main.cpp)
-include_directories(dayeight aocutils)
-target_link_libraries(dayeight aocutils)
