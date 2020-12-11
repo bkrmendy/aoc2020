@@ -3,69 +3,33 @@
 //
 
 #include <filesystem>
-#include <map>
 
 #include <fmt/core.h>
 #include "utils.h"
 
-/*
- * a b c
- * d X f
- * g h i
- */
-char occupied(size_t row, size_t column, std::vector<std::string>& lines) {
-    int neighbors = 0;
+int is_occupied(int row, int column, std::vector<std::string>& lines) {
+    if (row < 0
+        || row >= lines.size()
+        || column < 0
+        || column >= lines.at(row).size()) {
+        return 0;
+    }
+    if (lines.at(row).at(column) == '#') {
+        return 1;
+    }
+    return 0;
+}
 
-    if (row > 0) {
-        // a
-        if (column > 0) {
-            if (lines.at(row - 1).at(column - 1) == '#') {
-                neighbors += 1;
-            }
-        }
-        // b
-        if (lines.at(row - 1).at(column) == '#') {
-            neighbors += 1;
-        }
-        // c
-        if (column < lines.at(row).size() - 1) {
-            if (lines.at(row - 1).at(column + 1) == '#') {
-                neighbors += 1;
-            }
-        }
-    }
-
-    // d
-    if (column > 0) {
-        if (lines.at(row).at(column - 1) == '#') {
-            neighbors += 1;
-        }
-    }
-    // f
-    if (column < lines.at(row).size() - 1) {
-        if (lines.at(row).at(column + 1) == '#') {
-            neighbors += 1;
-        }
-    }
-
-    if (row < lines.size() - 1) {
-        // g
-        if (column > 0) {
-            if (lines.at(row + 1).at(column - 1) == '#') {
-                neighbors += 1;
-            }
-        }
-        // h
-        if (lines.at(row + 1).at(column) == '#') {
-            neighbors += 1;
-        }
-        // i
-        if (column < lines.at(row + 1).size() - 1) {
-            if (lines.at(row + 1).at(column + 1) == '#') {
-                neighbors += 1;
-            }
-        }
-    }
+char occupied(int row, int column, std::vector<std::string>& lines) {
+    int neighbors
+            = is_occupied(row - 1, column - 1, lines)
+              + is_occupied(row - 1, column, lines)
+              + is_occupied(row - 1, column + 1, lines)
+              + is_occupied(row, column - 1, lines)
+              + is_occupied(row, column + 1, lines)
+              + is_occupied(row + 1, column - 1, lines)
+              + is_occupied(row + 1, column, lines)
+              + is_occupied(row + 1, column + 1, lines);
 
     if (lines.at(row).at(column) == 'L') {
         return neighbors == 0 ? '#' : 'L';
@@ -76,7 +40,7 @@ char occupied(size_t row, size_t column, std::vector<std::string>& lines) {
     return '.';
 }
 
-int is_seat(size_t row, size_t column, int dr, int dc, std::vector<std::string>& lines) {
+int is_seat(int row, int column, int dr, int dc, std::vector<std::string>& lines) {
     int r = row + dr;
     int c = column + dc;
     while (r < lines.size()
@@ -95,7 +59,7 @@ int is_seat(size_t row, size_t column, int dr, int dc, std::vector<std::string>&
     return 0;
 }
 
-char occupied2(size_t row, size_t column, std::vector<std::string>& lines) {
+char occupied2(int row, int column, std::vector<std::string>& lines) {
     int neighbors
         = is_seat(row, column, -1, -1, lines)
           + is_seat(row, column, -1, 0, lines)
@@ -117,8 +81,8 @@ char occupied2(size_t row, size_t column, std::vector<std::string>& lines) {
 
 std::vector<std::string> step(std::vector<std::string>& lines) {
     std::vector<std::string> lines2 = lines;
-    for (size_t row = 0; row < lines.size(); row++) {
-        for(size_t column = 0; column < lines.at(row).size(); column++) {
+    for (int row = 0; row < lines.size(); row++) {
+        for(int column = 0; column < lines.at(row).size(); column++) {
             lines2.at(row).at(column) = occupied(row, column, lines);
         }
     }
@@ -127,8 +91,8 @@ std::vector<std::string> step(std::vector<std::string>& lines) {
 
 std::vector<std::string> step2(std::vector<std::string> lines) {
     std::vector<std::string> lines2 = lines;
-    for (size_t row = 0; row < lines.size(); row++) {
-        for(size_t column = 0; column < lines.at(row).size(); column++) {
+    for (int row = 0; row < lines.size(); row++) {
+        for(int column = 0; column < lines.at(row).size(); column++) {
             lines2.at(row).at(column) = occupied2(row, column, lines);
         }
     }
