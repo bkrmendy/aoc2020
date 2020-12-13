@@ -13,7 +13,10 @@ add_library(aocutils
         ${utils_src}
         aocutils/utils.h
         aocutils/utils.cpp
-        aocutils/overloaded.h)
+
+        aocutils/overloaded.h
+
+        )
 
 target_link_libraries(aocutils fmt)
 
