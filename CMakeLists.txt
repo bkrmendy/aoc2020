@@ -16,7 +16,7 @@ add_library(aocutils
 
         aocutils/overloaded.h
 
-        )
+        aocutils/ctre.h)
 
 target_link_libraries(aocutils fmt)
 
