@@ -27,7 +27,7 @@ std::vector<T> entries_from_file(std::filesystem::path& path, std::function<T(co
 }
 
 template<typename T>
-std::set<T> intersection(std::vector<std::set<T>>& sets) {
+std::set<T> set_intersection(std::vector<std::set<T>>& sets) {
     if (sets.empty()) {
         return std::set<T>{};
     }
