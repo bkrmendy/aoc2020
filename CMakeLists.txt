@@ -31,15 +31,15 @@ endfunction()
 # Daily challenges
 # ----------------
 
-Day(1)
-Day(2)
-Day(3)
-Day(4)
-Day(5)
-Day(6)
-Day(7)
-Day(8)
-Day(9)
+Day(01)
+Day(02)
+Day(03)
+Day(04)
+Day(05)
+Day(06)
+Day(07)
+Day(08)
+Day(09)
 Day(10)
 Day(11)
 Day(12)
@@ -48,5 +48,11 @@ Day(14)
 Day(15)
 Day(16)
 Day(17)
+Day(18)
+
+# Day 18
+add_executable(day18b day18/part_two.cpp)
+include_directories(day18b aocutils)
+target_link_libraries(day18b aocutils)
 
 
