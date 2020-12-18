@@ -31,7 +31,7 @@ void part_two(std::vector<int>& numbers) {
 }
 
 int main() {
-    auto path = std::filesystem::path("../input/day1.txt");
+    auto path = std::filesystem::path("../input/day01.txt");
     std::ifstream input{path.c_str()};
 
     std::vector<int> numbers = entries_from_file<int>(path, [](const auto& line) {
