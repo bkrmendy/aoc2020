@@ -24,7 +24,7 @@ enum class Operator {
     Multiply
 };
 
-using Step = std::pair<size_t, std::shared_ptr<Expression>>;
+using Step = std::pair<size_t, long>;
 
 size_t closing_paren_pos(std::string& tokens, size_t from) {
     size_t parens = 0;
