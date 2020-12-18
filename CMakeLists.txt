@@ -16,7 +16,7 @@ add_library(aocutils
 
         aocutils/overloaded.h
 
-        aocutils/ctre.h)
+        aocutils/ctre.h day19/main.cpp)
 
 target_link_libraries(aocutils fmt)
 
@@ -48,5 +48,6 @@ Day(14)
 Day(15)
 Day(16)
 Day(17)
+Day(19)
 
 
