@@ -11,6 +11,8 @@
 #include <functional>
 #include <string>
 
+std::vector<std::string> blocks_from_file(std::filesystem::path& path, std::string split_on);
+
 std::vector<std::string> lines_from_file(std::filesystem::path&);
 
 template<typename T>
