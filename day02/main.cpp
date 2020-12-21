@@ -16,7 +16,7 @@ struct Rule {
 };
 
 int main() {
-    auto path = std::filesystem::path{"../input/day2.txt"};
+    auto path = std::filesystem::path{"../input/day02.txt"};
 
     std::vector<Rule> passwords = entries_from_file<Rule>(path, [](const std::string& entry) {
        std::string hi_lo_sep = "-";
