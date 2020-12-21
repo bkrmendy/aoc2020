@@ -25,6 +25,15 @@ std::vector<T> entries_from_file(std::filesystem::path& path, std::function<T(co
     return entries;
 }
 
+template <typename T>
+std::vector<T> reverse(const std::vector<T>& vec) {
+    return std::vector<T>{vec.rend(), vec.rbegin()};
+}
+
+std::string reverse(const std::string& str) {
+    return std::string{str.rend(), str.rbegin()};
+}
+
 std::vector<std::string> split(const std::string& str, const std::string& delimiter);
 
 #endif //AOC2020_UTILS_H
