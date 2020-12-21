@@ -9,28 +9,6 @@
 #include <fmt/core.h>
 #include "utils.h"
 
-
-std::set<char> intersection(std::vector<std::set<char>>& sets) {
-    if (sets.empty()) {
-        return std::set<char>{};
-    }
-
-    if (sets.size() == 1) {
-        return sets.at(0);
-    };
-
-    std::set<char> intersect = sets.at(0);
-    for (const auto& set : sets) {
-        std::set<char> intersect2{};
-        std::set_intersection(set.begin(), set.end(),
-                              intersect.begin(), intersect.end(),
-                              std::inserter(intersect2, intersect2.begin()));
-        intersect = intersect2;
-    }
-
-    return intersect;
-}
-
 int main() {
     auto path = std::filesystem::path("../input/day6.txt");
 
