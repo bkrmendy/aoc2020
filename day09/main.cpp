@@ -29,7 +29,7 @@ long part_one(std::vector<long>& entries) {
 }
 
 int main() {
-    auto path = std::filesystem::path("../input/day9.txt");
+    auto path = std::filesystem::path("../input/day09.txt");
 
     std::vector<long> entries = entries_from_file<long>(path, [](const std::string& line) {
        return std::stol(line);

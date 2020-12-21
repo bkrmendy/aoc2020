@@ -34,7 +34,7 @@ std::vector<std::map<std::string, std::string>> batches(std::vector<std::string>
 }
 
 int main() {
-    auto path = std::filesystem::path{"../input/day4.txt"};
+    auto path = std::filesystem::path{"../input/day04.txt"};
     auto lines = lines_from_file(path);
 
     auto passports = batches(lines);

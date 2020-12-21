@@ -145,7 +145,7 @@ int part_two(std::vector<Instr>& instructions) {
 }
 
 int main() {
-    auto path = std::filesystem::path("../input/day8.txt");
+    auto path = std::filesystem::path("../input/day08.txt");
     std::vector<Instr> instructions = entries_from_file<Instr>(path, [](const std::string& line) {
         auto parts = split(line, " ");
         auto argument = std::stoi(parts.at(1));

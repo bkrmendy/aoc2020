@@ -79,7 +79,7 @@ void part_one(const std::vector<std::string>& lines) {
 }
 
 int main() {
-    auto path = std::filesystem::path("../input/day5.txt");
+    auto path = std::filesystem::path("../input/day05.txt");
     auto lines = lines_from_file(path);
 
     part_one(lines);
