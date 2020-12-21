@@ -29,10 +29,12 @@ std::vector<std::string> split(const std::string& str, const std::string& delimi
             res.push_back(token);
         }
     }
+
     token = str.substr(pos_start);
     if (!token.empty()) {
-        res.push_back(token);
+        res.push_back (token);
     }
+
     return res;
 }
 

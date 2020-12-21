@@ -10,7 +10,7 @@
 #include "utils.h"
 
 int main() {
-    auto path = std::filesystem::path("../input/day6.txt");
+    auto path = std::filesystem::path("../input/day06.txt");
 
     auto lines = lines_from_file(path);
 

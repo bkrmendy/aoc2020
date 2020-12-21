@@ -44,7 +44,7 @@ int bag_contains_n(std::vector<Entry>& entries, std::map<std::string, std::vecto
 }
 
 int main() {
-    auto path = std::filesystem::path("../input/day7.txt");
+    auto path = std::filesystem::path("../input/day07.txt");
     auto lines = lines_from_file(path);
 
     std::map<std::string, std::vector<Entry>> entries{};

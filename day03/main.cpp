@@ -23,7 +23,7 @@ int traverse(const std::vector<std::string>& map, size_t step_right, size_t step
 }
 
 int main() {
-    auto path = std::filesystem::path("../input/day3.txt");
+    auto path = std::filesystem::path("../input/day03.txt");
     auto lines = lines_from_file(path);
 
     auto trees = traverse(lines, 3, 1);
