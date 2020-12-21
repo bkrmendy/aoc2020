@@ -112,23 +112,27 @@ std::map<int, Rule> read_rules(std::filesystem::path&& path) {
     return rules;
 }
 
+int n_messages_match(std::map<int, Rule>&& rules, std::vector<std::string>& messages) {
+    auto possible_messages = matches_for(rules, rules.at(0));
+
+    return std::count_if(messages.begin(),
+                         messages.end(),
+                         [&possible_messages](std::string& message) {
+                              return std::find(possible_messages.begin(),
+                                               possible_messages.end(),
+                                               message) != possible_messages.end();
+                        });
+}
+
 int main() {
     auto messages_path = std::filesystem::path{"../input/day19_messages.txt"};
     auto messages = lines_from_file(messages_path);
 
-    auto rules = read_rules(std::filesystem::path{"../input/day19_rules.txt"});
+//    fmt::print("Part one: {}\n",
+//               n_messages_match(read_rules(std::filesystem::path{"../input/day19_rules.txt"}),
+//                                messages));
 
-    auto possible_messages = matches_for(rules, rules.at(0));
-
-    int matches_0 = std::count_if(messages.begin(),
-                                messages.end(),
-                                  [&possible_messages](std::string& message) {
-                                      return std::find(possible_messages.begin(),
-                                                       possible_messages.end(),
-                                                       message) != possible_messages.end();
-                                  });
-
-
-    fmt::print("Part one: {}\n", matches_0);
-    fmt::print("Part two: {}\n", 2);
+    fmt::print("Part two: {}\n",
+               n_messages_match(read_rules(std::filesystem::path{"../input/day19_rules_mod.txt"}),
+                                messages));
 }
