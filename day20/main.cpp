@@ -12,38 +12,34 @@
 
 struct Block {
     size_t number;
-    const size_t top;
-    const size_t right;
-    const size_t bottom;
-    const size_t left;
+    size_t top;
+    size_t right;
+    size_t bottom;
+    size_t left;
+
+    const std::vector<std::string> rows;
 
     Block(const size_t number,
-          const size_t top,
-          const size_t right,
-          const size_t bottom,
-          const size_t left)
+          std::vector<std::string> lines)
         : number(number)
-        , top(top)
-        , right(right)
-        , bottom(bottom)
-        , left(left
-    ) {}
+        , rows(std::move(lines)) {
+        auto hasher = std::hash<std::string>{};
+        this->top = hasher(rows[1]);
+        this->bottom = hasher(rows[rows.size() - 1]);
 
-    // rotate right
-    Block rotate() const {
-        return Block{number, left, top, right, bottom};
-    }
+        std::string first_row{};
+        std::string last_row{};
 
-    Block flip_vertical() const {
-        return Block{number, bottom, right, top, left};
-    }
+        for (size_t i = 1; i < rows.size(); i++) {
+            auto line = rows.at(i);
+            first_row += rows.at(0);
+            last_row += rows.at(line.size() - 1);
+        }
 
-    Block flip_horizontal() const {
-        return Block{number, top, left, bottom, right};
+        this->left = hasher(first_row);
+        this->right = hasher(last_row);
     }
 };
-
-
 
 std::vector<Block> read_blocks(std::filesystem::path from) {
     auto blocks = blocks_from_file(from, "\n\n");
@@ -51,24 +47,29 @@ std::vector<Block> read_blocks(std::filesystem::path from) {
     std::vector<Block> res{};
     for (const auto& block : blocks) {
         auto lines = split(block, "\n");
-        size_t number = std::stoul(lines[0].substr(lines[0].find(" ")));
-        auto hasher = std::hash<std::string>{};
-        auto top = hasher(lines[1]);
-        auto bottom = hasher(lines[lines.size() - 1]);
+        size_t number = std::stoul(lines[0].substr(lines[0].find(' ')));
 
-        std::string first_row{};
-        std::string last_row{};
-        for (size_t i = 1; i < lines.size(); i++) {
-            auto line = lines.at(i);
-            first_row += line.at(0);
-            last_row += line.at(line.size() - 1);
-        }
+        // add original orientation
+        res.emplace_back(number, lines);
 
-        auto first = hasher(first_row);
-        auto last = hasher(last_row);
+        // add upside down version
+        auto upside_down = reverse(lines);
+        res.emplace_back(number, upside_down);
 
-        res.emplace_back(number, top, last, bottom, first);
+        // add flipped version
+        std::vector<std::string> flipped{};
+        std::transform(lines.begin(),
+                       lines.end(),
+                       std::back_inserter(flipped),
+                       [](std::string& row) { return reverse(row); });
+        auto flipped_lines = flipped;
+        res.emplace_back(number, flipped);
+
+        // add upside-down flipped version
+        res.emplace_back(number, reverse(flipped_lines));
     }
+
+    assert(res.size() == blocks.size() * 4);
 
     return res;
 }
@@ -76,16 +77,19 @@ std::vector<Block> read_blocks(std::filesystem::path from) {
 int main() {
     auto path = std::filesystem::path("../input/day20.txt");
     auto blocks = read_blocks(path);
+    
+    std::map<size_t, std::vector<size_t>> edge_to_block;
 
-    auto side_length = sqrt(blocks.size());
-
-
-    std::map<std::pair<size_t, size_t>, Block> grid{};
-    for (size_t row = 0; row < side_length; row++) {
-        for (size_t column = 0; column < side_length; column++) {
-            grid.emplace(std::make_pair<int, int>(row, column), blocks.at(row * side_length + column));
+    for (const auto& block : blocks) {
+        for (const auto& id : { block.right, block.left, block.bottom, block.top }) {
+            if (edge_to_block.contains(id)) {
+                edge_to_block.emplace(id, std::vector<size_t>{});
+            }
+            edge_to_block.at(id).push_back(block.number);
         }
     }
+
+
 
     fmt::print("Part one: {}\n", 22);
     fmt::print("Part two: {}\n", 33);
