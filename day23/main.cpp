@@ -69,6 +69,11 @@ void play(std::list<int>& cups, size_t moves) {
     }
 }
 
+/**
+ *
+ * TODO: array where index is cup value and value is next pointer in said array
+ */
+
 int main() {
     std::list<int> cups = {5, 8, 3, 9, 7, 6, 2, 4, 1};
     play(cups, 100);
