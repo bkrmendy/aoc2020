@@ -2,6 +2,7 @@
 // Created by Berci on 2020. 12. 23..
 //
 
+#include <vector>
 #include <list>
 #include <fmt/core.h>
 #include <fmt/ranges.h>
@@ -74,24 +75,42 @@ void play(std::list<int>& cups, size_t moves) {
  * TODO: array where index is cup value and value is next pointer in said array
  */
 
+void play2(std::vector<int>& cups, int starting, size_t moves) {
+    for (size_t round = 0; round < moves; round++) {
+        // remove next 3
+
+        // select destination
+        // insert immediately clockwise
+        // select new current
+    }
+}
+
 int main() {
+    //                        1  2  3  4  5  6  7  8 9
+    std::vector<int> cups2 = {0, 7, 3, 8, 1, 6, 5, 2, 4};
+
+    //                     0  1  2  3  4  5  6  7  8
     std::list<int> cups = {5, 8, 3, 9, 7, 6, 2, 4, 1};
+    //                     4  7  2  8  6  5  1  3  0
+
+    play2(cups2, 5, 100);
+
     play(cups, 100);
     // 24987653
     fmt::print("Part one: {}\n", cups);
 
-    std::list<int> cups_ext = {3,8,9,1,2,5,4,6,7};
-    for (int n = 10; n < 1'000'000; n++) {
-        cups_ext.push_back(n);
-    }
-
-    play(cups_ext, 10'000'000);
-
-    auto one = std::find(cups_ext.begin(), cups_ext.end(), 1);
-    one = next_with_wrap(cups_ext, one);
-    int first = *one;
-    one = next_with_wrap(cups_ext, one);
-    int second = *one;
-
-    fmt::print("Part two: {}\n", first * second);
+//    std::list<int> cups_ext = {3,8,9,1,2,5,4,6,7};
+//    for (int n = 10; n < 1'000'000; n++) {
+//        cups_ext.push_back(n);
+//    }
+//
+//    play(cups_ext, 10'000'000);
+//
+//    auto one = std::find(cups_ext.begin(), cups_ext.end(), 1);
+//    one = next_with_wrap(cups_ext, one);
+//    int first = *one;
+//    one = next_with_wrap(cups_ext, one);
+//    int second = *one;
+//
+//    fmt::print("Part two: {}\n", first * second);
 }
