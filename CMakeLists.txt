@@ -52,6 +52,7 @@ Day(18)
 Day(19)
 Day(21)
 Day(22)
+Day(24)
 
 # Day 18 part 2
 add_executable(day18b day18/part_two.cpp)

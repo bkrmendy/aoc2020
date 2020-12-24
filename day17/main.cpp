@@ -4,64 +4,36 @@
 
 #include <map>
 #include <tuple>
-#include <set>
 #include <vector>
 #include <algorithm>
 
 #include <fmt/core.h>
 #include "utils.h"
 
-struct Coord {
-    int x;
-    int y;
-    int z;
-};
-bool operator<(const Coord& left, const Coord& right) {
-    if (left.x < right.x) return left.x < right.x;
-    if (left.y < right.y) return left.y < right.y;
-    return left.z < right.z;
-
-}
-
-bool operator==(const Coord& left, const Coord& right) {
-    return left.x == right.x && left.y == right.y && left.z == right.z;
-}
-
-bool operator!=(Coord& left, Coord& right) {
-    return !(left == right);
-}
-
 using Crd3 = std::tuple<int, int, int>;
 using Crd4 = std::tuple<int, int, int, int>;
 
-enum class State {
+enum class Status {
     Active,
     Inactive
 };
 
-template <typename T>
-State neighbor_with_default(std::map<T, State>& cubes, T c, State def) {
-    if (cubes.contains(c)) {
-        return cubes.at(c);
-    }
-    return def;
-}
-
+template<typename State>
 State next_state(State this_state, size_t active_neighbors) {
-    if (this_state == State::Active && (active_neighbors == 2 || active_neighbors == 3)) {
-        return State::Active;
+    if (this_state == Status::Active && (active_neighbors == 2 || active_neighbors == 3)) {
+        return Status::Active;
     }
-    if (this_state == State::Inactive && active_neighbors == 3) {
-        return State::Active;
+    if (this_state == Status::Inactive && active_neighbors == 3) {
+        return Status::Active;
     }
-    return State::Inactive;
+    return Status::Inactive;
 }
 
 template<typename T>
-std::vector<T> sub_cube(std::map<T, State>& cubes, T c);
+std::vector<T> sub_cube(T c);
 
 template<>
-std::vector<Crd4> sub_cube(std::map<Crd4, State>& cubes, Crd4 c) {
+std::vector<Crd4> sub_cube(Crd4 c) {
     int x = std::get<0>(c);
     int y = std::get<1>(c);
     int z = std::get<2>(c);
@@ -84,7 +56,7 @@ std::vector<Crd4> sub_cube(std::map<Crd4, State>& cubes, Crd4 c) {
 }
 
 template<>
-std::vector<Crd3> sub_cube(std::map<Crd3, State>& cubes, Crd3 c) {
+std::vector<Crd3> sub_cube(Crd3 c) {
     int x = std::get<0>(c);
     int y = std::get<1>(c);
     int z = std::get<2>(c);
@@ -103,99 +75,84 @@ std::vector<Crd3> sub_cube(std::map<Crd3, State>& cubes, Crd3 c) {
     return neighbors;
 }
 
-template<typename T>
-std::vector<State> neighbors_of(std::map<T, State>& cubes, T c) {
-    auto neighbors = sub_cube(cubes, c);
-    std::vector<State> states{};
+template<typename Coord, typename State>
+std::vector<Status> neighbors_of(std::map<Coord, State>& cubes, Coord coord) {
+    auto neighbors = sub_cube(coord);
+    std::vector<Status> states{};
     std::transform(neighbors.begin(),
                    neighbors.end(),
                    std::back_inserter(states),
-                   [&cubes](const auto& c) { return neighbor_with_default(cubes, c, State::Inactive); });
+                   [&cubes](const auto& c) { return at_with_default(cubes, c, Status::Inactive); });
     return states;
 }
 
-template<typename T>
-std::map<T, State> extend_neighbors(std::map<T, State>& cubes) {
-    std::map<T, State> these_cubes{};
-    for (const auto& entry : cubes) {
-        auto coord = entry.first;
-        auto s_cube = sub_cube(cubes, coord);
-        these_cubes.insert(std::make_pair(coord, State::Inactive));
-        for (auto& cube : s_cube) {
-            these_cubes.insert(std::make_pair(cube, State::Inactive));
+template<typename Coord, typename State>
+std::map<Coord, State> extend_neighbors(std::map<Coord, State>& cubes, State default_state) {
+    std::map<Coord, State> these_tiles{};
+    for (const auto& [coord, _] : cubes) {
+        auto neighbors = sub_cube(coord);
+        these_tiles.insert(std::make_pair(coord, default_state));
+        for (auto& neighbor : neighbors) {
+            these_tiles.insert(std::make_pair(neighbor, default_state));
         }
     }
 
-    for (const auto& entry : cubes) {
-        auto coord = entry.first;
-        auto state = entry.second;
-        these_cubes.at(coord) = state;
+    for (const auto& [coord, state] : cubes) {
+        these_tiles.at(coord) = state;
     }
 
-    return these_cubes;
+    return these_tiles;
 }
 
 template<typename T>
-std::map<T, State> step(std::map<T, State>& cubes) {
-    std::map<T, State> these_cubes = cubes;
-    for (const auto& entry : cubes) {
-        auto coord = entry.first;
-        auto state = entry.second;
+std::map<T, Status> step(std::map<T, Status>& cubes) {
+    std::map<T, Status> these_cubes = cubes;
+    for (const auto& [coord, state] : cubes) {
         auto neighbors = neighbors_of(cubes, coord);
         auto actives = std::count_if(neighbors.begin(),
                                      neighbors.end(),
-                                     [](auto state) { return state == State::Active; });
+                                     [](auto state) { return state == Status::Active; });
 
         these_cubes.at(coord) = next_state(state, actives);
     }
     return these_cubes;
 }
 
-int part_one(std::map<Crd3, State>& cubes) {
-    for (size_t cycle = 0; cycle < 6; cycle++) {
-        std::map<Crd3, State> e_cubes = extend_neighbors(cubes);
-        cubes = step(e_cubes);
+template <typename Coord, typename S>
+int play(std::map<Coord, S>& cubes, size_t rounds) {
+    for (size_t cycle = 0; cycle < rounds; cycle++) {
+        std::map<Coord, S> extended_tiles = extend_neighbors(cubes, Status::Inactive);
+        cubes = step(extended_tiles);
     }
 
     return std::count_if(cubes.begin(),
                          cubes.end(),
-                         [](auto cube) { return cube.second == State::Active; });
-}
-
-int part_two(std::map<Crd4, State>& cubes) {
-    for (size_t cycle = 0; cycle < 6; cycle++) {
-        std::map<Crd4, State> e_cubes = extend_neighbors(cubes);
-        cubes = step(e_cubes);
-    }
-
-    return std::count_if(cubes.begin(),
-                         cubes.end(),
-                         [](auto cube) { return cube.second == State::Active; });
+                         [](auto cube) { return cube.second == Status::Active; });
 }
 
 int main() {
     auto path = std::filesystem::path{"../input/day17.txt"};
     auto lines = lines_from_file(path);
 
-    std::map<Crd3, State> cubes3;
+    std::map<Crd3, Status> cubes3;
 
     for (int r = 0; r < lines.size(); r++) {
         for (int c = 0; c < lines.at(r).size(); c++) {
-            auto state = lines.at(r).at(c) == '.' ? State::Inactive : State::Active;
+            auto state = lines.at(r).at(c) == '.' ? Status::Inactive : Status::Active;
             cubes3.insert({std::make_tuple(c, r, 0), state});
         }
     }
 
-    std::map<Crd4, State> cubes4;
+    std::map<Crd4, Status> cubes4;
 
     for (int r = 0; r < lines.size(); r++) {
         for (int c = 0; c < lines.at(r).size(); c++) {
-            auto state = lines.at(r).at(c) == '.' ? State::Inactive : State::Active;
+            auto state = lines.at(r).at(c) == '.' ? Status::Inactive : Status::Active;
             cubes4.insert({std::make_tuple(c, r, 0, 0), state});
         }
     }
 
-    fmt::print("Part one: {}\n", part_one(cubes3));
-    fmt::print("Part two: {}\n", part_two(cubes4));
+    fmt::print("Part one: {}\n", play(cubes3, 6));
+    fmt::print("Part two: {}\n", play(cubes4, 6));
 
 }
