@@ -7,6 +7,7 @@
 
 #include <vector>
 #include <set>
+#include <map>
 #include <string>
 #include <filesystem>
 #include <functional>
@@ -53,6 +54,14 @@ std::set<T> difference(std::set<T>& left, std::set<T>& right) {
                         right.begin(), right.end(),
                         std::inserter(res, res.begin()));
     return res;
+}
+
+template<typename Key, typename Value>
+Value at_with_default(std::map<Key, Value>& map, Key key, Value def) {
+    if (map.contains(key)) {
+        return map.at(key);
+    }
+    return def;
 }
 
 std::vector<std::string> split(const std::string& str, const std::string& delimiter);
