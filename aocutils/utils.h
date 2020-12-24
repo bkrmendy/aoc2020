@@ -8,6 +8,7 @@
 #include <vector>
 #include <set>
 #include <map>
+#include <unordered_map>
 #include <string>
 #include <filesystem>
 #include <functional>
@@ -58,6 +59,14 @@ std::set<T> difference(std::set<T>& left, std::set<T>& right) {
 
 template<typename Key, typename Value>
 Value at_with_default(std::map<Key, Value>& map, Key key, Value def) {
+    if (map.contains(key)) {
+        return map.at(key);
+    }
+    return def;
+}
+
+template<typename Key, typename Value, typename Hash>
+Value at_with_default(std::unordered_map<Key, Value, Hash>& map, Key key, Value def) {
     if (map.contains(key)) {
         return map.at(key);
     }

@@ -2,7 +2,7 @@
 // Created by Berci on 2020. 12. 17..
 //
 
-#include <map>
+#include <unordered_map>
 #include <tuple>
 #include <vector>
 #include <algorithm>
@@ -12,6 +12,22 @@
 
 using Crd3 = std::tuple<int, int, int>;
 using Crd4 = std::tuple<int, int, int, int>;
+
+struct crd3_hash : public std::unary_function<Crd3, std::size_t> {
+    std::size_t operator()(const Crd3& k) const
+    {
+        auto& [x, y, z] = k;
+        return x ^ y ^ z;
+    }
+};
+
+struct crd4_hash : public std::unary_function<Crd4, std::size_t> {
+    std::size_t operator()(const Crd4& k) const
+    {
+        auto& [x, y, z, w] = k;
+        return x ^ y ^ z ^ w;
+    }
+};
 
 enum class Status {
     Active,
@@ -75,8 +91,8 @@ std::vector<Crd3> sub_cube(Crd3 c) {
     return neighbors;
 }
 
-template<typename Coord, typename State>
-std::vector<Status> neighbors_of(std::map<Coord, State>& cubes, Coord coord) {
+template<typename Coord, typename State, typename Hash>
+std::vector<Status> neighbors_of(std::unordered_map<Coord, State, Hash>& cubes, Coord coord) {
     auto neighbors = sub_cube(coord);
     std::vector<Status> states{};
     std::transform(neighbors.begin(),
@@ -86,9 +102,10 @@ std::vector<Status> neighbors_of(std::map<Coord, State>& cubes, Coord coord) {
     return states;
 }
 
-template<typename Coord, typename State>
-std::map<Coord, State> extend_neighbors(std::map<Coord, State>& cubes, State default_state) {
-    std::map<Coord, State> these_tiles{};
+template<typename Coord, typename State, typename Hash>
+std::unordered_map<Coord, State, Hash> extend_neighbors(std::unordered_map<Coord, State, Hash>& cubes,
+                                                        State default_state) {
+    std::unordered_map<Coord, State, Hash> these_tiles{};
     for (const auto& [coord, _] : cubes) {
         auto neighbors = sub_cube(coord);
         these_tiles.insert(std::make_pair(coord, default_state));
@@ -104,9 +121,9 @@ std::map<Coord, State> extend_neighbors(std::map<Coord, State>& cubes, State def
     return these_tiles;
 }
 
-template<typename T>
-std::map<T, Status> step(std::map<T, Status>& cubes) {
-    std::map<T, Status> these_cubes = cubes;
+template<typename T, typename State, typename Hash>
+std::unordered_map<T, State, Hash> step(std::unordered_map<T, State, Hash>& cubes) {
+    auto these_cubes = cubes;
     for (const auto& [coord, state] : cubes) {
         auto neighbors = neighbors_of(cubes, coord);
         auto actives = std::count_if(neighbors.begin(),
@@ -118,10 +135,10 @@ std::map<T, Status> step(std::map<T, Status>& cubes) {
     return these_cubes;
 }
 
-template <typename Coord, typename S>
-int play(std::map<Coord, S>& cubes, size_t rounds) {
+template <typename Coord, typename S, typename Hash>
+int play(std::unordered_map<Coord, S, Hash>& cubes, size_t rounds) {
     for (size_t cycle = 0; cycle < rounds; cycle++) {
-        std::map<Coord, S> extended_tiles = extend_neighbors(cubes, Status::Inactive);
+        auto extended_tiles = extend_neighbors(cubes, Status::Inactive);
         cubes = step(extended_tiles);
     }
 
@@ -134,7 +151,7 @@ int main() {
     auto path = std::filesystem::path{"../input/day17.txt"};
     auto lines = lines_from_file(path);
 
-    std::map<Crd3, Status> cubes3;
+    std::unordered_map<Crd3, Status, crd3_hash> cubes3;
 
     for (int r = 0; r < lines.size(); r++) {
         for (int c = 0; c < lines.at(r).size(); c++) {
@@ -143,7 +160,7 @@ int main() {
         }
     }
 
-    std::map<Crd4, Status> cubes4;
+    std::unordered_map<Crd4, Status, crd4_hash> cubes4;
 
     for (int r = 0; r < lines.size(); r++) {
         for (int c = 0; c < lines.at(r).size(); c++) {
