@@ -1,4 +1,14 @@
-Advent of Code 2020
+# Advent of Code 2020
+
+## ToDos:
+
+[ ] Webassembly compiler for handheld console
+
+[ ] Generic Game of Life framework
+
+[ ] Visualizer for 3D Game of Life
+
+[ ] Visualizer for Hexagonal Game of Life
 
 Progress:
 ```
@@ -14,7 +24,7 @@ Progress:
 10 **
 11 **
 12 **
-13 *(*) 
+13 ** (part two solved in python) 
 14 *
 15 **
 16 *
@@ -23,4 +33,5 @@ Progress:
 19 *
 21 **
 22 **
+24 **
 ```
