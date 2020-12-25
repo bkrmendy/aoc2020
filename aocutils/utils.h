@@ -59,18 +59,20 @@ std::set<T> difference(std::set<T>& left, std::set<T>& right) {
 
 template<typename Key, typename Value>
 Value at_with_default(std::map<Key, Value>& map, Key key, Value def) {
-    if (map.contains(key)) {
+    try {
         return map.at(key);
+    } catch(std::exception& e) {
+        return def;
     }
-    return def;
 }
 
 template<typename Key, typename Value, typename Hash>
 Value at_with_default(std::unordered_map<Key, Value, Hash>& map, Key key, Value def) {
-    if (map.contains(key)) {
+    try {
         return map.at(key);
+    } catch(std::exception& e) {
+        return def;
     }
-    return def;
 }
 
 std::vector<std::string> split(const std::string& str, const std::string& delimiter);

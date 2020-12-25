@@ -24,7 +24,12 @@ enum Side {
 };
 
 using Coordinate = std::pair<int, int>;
-using Map = std::map<Coordinate, Side>;
+
+struct hasher : std::unary_function<Coordinate, size_t> {
+    size_t operator()(const Coordinate& c) const {
+        return c.first ^ c.second;
+    }
+};
 
 std::vector<std::vector<Direction>> parse_instructions(std::vector<std::string>&& lines) {
     std::vector<std::vector<Direction>> instructions;
@@ -135,7 +140,7 @@ std::vector<Coordinate> neighbors_of(const Coordinate& coord) {
 }
 
 template<typename Coord, typename State>
-std::vector<State> neighbors_of(std::map<Coord, State>& cubes, Coord coord) {
+std::vector<State> neighbors_of(std::unordered_map<Coord, State, hasher>& cubes, Coord coord) {
     auto neighbors = neighbors_of(coord);
     std::vector<State> states{};
     std::transform(neighbors.begin(),
@@ -146,8 +151,9 @@ std::vector<State> neighbors_of(std::map<Coord, State>& cubes, Coord coord) {
 }
 
 template<typename Coord, typename State>
-std::map<Coord, State> extend_neighbors(std::map<Coord, State>& cubes, State default_state) {
-    std::map<Coord, State> these_tiles{};
+std::unordered_map<Coord, State, hasher> extend_neighbors(std::unordered_map<Coord, Side, hasher>& cubes,
+                                                          State default_state) {
+    std::unordered_map<Coordinate, Side, hasher> these_tiles{};
     for (const auto& [coord, _] : cubes) {
         const auto& neighbors = neighbors_of(coord);
         these_tiles.insert(std::make_pair(coord, default_state));
@@ -163,9 +169,9 @@ std::map<Coord, State> extend_neighbors(std::map<Coord, State>& cubes, State def
     return these_tiles;
 }
 
-template<typename T, typename State>
-std::map<T, State> step(std::map<T, State>& tiles) {
-    std::map<T, State> these_cubes = tiles;
+template<typename Coord, typename State>
+std::unordered_map<Coord, State, hasher> step(std::unordered_map<Coord, State, hasher>& tiles) {
+    auto these_cubes = tiles;
     for (const auto& [coord, state] : tiles) {
         auto neighbors = neighbors_of(tiles, coord);
         auto actives = std::count_if(neighbors.begin(),
@@ -177,10 +183,10 @@ std::map<T, State> step(std::map<T, State>& tiles) {
     return these_cubes;
 }
 
-template <typename Coord, typename S>
-int play(std::map<Coord, S>& tiles, size_t rounds) {
+template<typename Coord, typename State>
+int play(std::unordered_map<Coord, State, hasher>& tiles, size_t rounds) {
     for (size_t cycle = 0; cycle < rounds; cycle++) {
-        std::map<Coord, S> extended_tiles = extend_neighbors(tiles, Side::White);
+        auto extended_tiles = extend_neighbors(tiles, Side::White);
         tiles = step(extended_tiles);
     }
 
@@ -196,7 +202,7 @@ int main() {
     auto path = std::filesystem::path{"../input/day24.txt"};
     auto instructions = parse_instructions(lines_from_file(path));
 
-    auto n_blacks = [](Map& map) {
+    auto n_blacks = [](std::unordered_map<Coordinate, Side, hasher>& map) {
         return std::count_if(map.begin(), map.end(), [](auto& entry) {
             auto& [_, side] = entry;
             return side == Side::Black;
@@ -204,7 +210,7 @@ int main() {
     };
 
     /// part one
-    Map tiles{};
+    std::unordered_map<Coordinate, Side, hasher> tiles{};
     for (const auto& sequence : instructions) {
         auto coord = Coordinate{0, 0};
 
