@@ -97,7 +97,7 @@ uint64_t part_two(std::vector<std::vector<int>>& tickets, std::vector<Constraint
             for (auto &ticket : tickets) {
                 std::unordered_set<size_t> m{};
                 for (auto c : these_matchers) {
-                    if (!constraints.at(c).matches(ticket.at(column))) {
+                    if (constraints.at(c).matches(ticket.at(column))) {
                         m.insert(c);
                     }
                 }
