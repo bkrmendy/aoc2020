@@ -25,8 +25,6 @@ public:
     }
 };
 
-std::string your_ticket = "83,137,101,73,67,61,103,131,151,127,113,107,109,89,71,139,167,97,59,53";
-
 constexpr auto pattern = ctll::fixed_string{"([a-z: ]*)([0-9]+)-([0-9]+) or ([0-9]+)-([0-9]+)"};
 
 std::vector<Constraint> read_constrains(std::vector<std::string>&& lines) {
@@ -59,61 +57,78 @@ std::vector<std::vector<int>> read_tickets(std::vector<std::string>&& lines) {
     return tickets;
 }
 
-int part_one(std::filesystem::path& nearby_path, std::filesystem::path& constraints_path) {
-    std::vector<Constraint> constraints = read_constrains(lines_from_file(constraints_path));
-    std::vector<std::vector<int>> tickets = read_tickets(lines_from_file(nearby_path));
-
+std::pair<int, std::vector<std::vector<int>>> valid_tickets(std::vector<std::vector<int>>& tickets,
+                                            std::vector<Constraint> constraints) {
+    std::vector<std::vector<int>> valids;
     int total = 0;
-    for (size_t i = 0; i < tickets.size(); i++) {
-        for (size_t j = 0; j < tickets.at(i).size(); j++) {
-            auto value = tickets.at(i).at(j);
-            bool ok = std::any_of(constraints.begin(),
+    for (auto & ticket : tickets) {
+        bool ok = true;
+        for (int value : ticket) {
+            bool this_ok = std::any_of(constraints.begin(),
                                   constraints.end(),
                                   [&value](Constraint c) { return c.matches(value); });
-            if (not ok) {
+            ok = ok && this_ok;
+            if (not this_ok) {
                 total += value;
             }
         }
+        if (ok) {
+            valids.push_back(ticket);
+        }
     }
-
-    return total;
+    return {total, valids};
 }
 
-int part_two(std::filesystem::path& nearby_path, std::filesystem::path& constraints_path) {
-    std::vector<Constraint> constraints = read_constrains(lines_from_file(constraints_path));
-    std::vector<std::vector<int>> tickets = read_tickets(lines_from_file(nearby_path));
+uint64_t part_two(std::vector<std::vector<int>>& tickets, std::vector<Constraint> constraints) {
+    std::string your_ticket = "83,137,101,73,67,61,103,131,151,127,113,107,109,89,71,139,167,97,59,53";
     auto this_ticket = read_ticket(your_ticket);
 
     std::set<size_t> matchers{};
-    for (size_t c = 0; c < constraints.size(); c++) {
-        matchers.insert(c);
+    for (size_t ic = 0; ic < constraints.size(); ic++) {
+        matchers.insert(ic);
     }
 
     std::map<size_t, size_t> constraint_to_pos{};
 
-    for(size_t i = 0; i < this_ticket.size(); i++) {
-        std::set<size_t> these_matchers = matchers;
-        for (size_t j = 0; j < tickets.size(); j++) {
-            std::set<size_t> m{};
-            for (auto c : these_matchers) {
-                if (constraints.at(c).matches(tickets.at(j).at(i))) {
-                    m.insert(c);
+    while (!matchers.empty()) {
+        for (size_t column = 0; column < this_ticket.size(); column++) {
+            std::set<size_t> these_matchers = matchers;
+            for (auto &ticket : tickets) {
+                std::set<size_t> m{};
+                for (auto c : these_matchers) {
+                    if (constraints.at(c).matches(ticket.at(column))) {
+                        m.insert(c);
+                    }
                 }
+                these_matchers = std::move(m);
             }
-            these_matchers = m;
+            if (these_matchers.size() == 1) {
+                matchers.erase(*these_matchers.begin());
+                constraint_to_pos.emplace(*these_matchers.begin(), column);
+            }
         }
-        assert(these_matchers.size() == 1);
-        constraint_to_pos.emplace(*these_matchers.begin(), i);
     }
 
-    auto g = 0;
+    uint64_t res = 1;
+    res *= this_ticket.at(constraint_to_pos.at(0));
+    res *= this_ticket.at(constraint_to_pos.at(1));
+    res *= this_ticket.at(constraint_to_pos.at(2));
+    res *= this_ticket.at(constraint_to_pos.at(3));
+    res *= this_ticket.at(constraint_to_pos.at(4));
+    res *= this_ticket.at(constraint_to_pos.at(5));
 
+    return res;
 }
 
 int main() {
-    auto path = std::filesystem::path{"../input/day16_nearby.txt"};
+    auto nearby_path = std::filesystem::path{"../input/day16_nearby.txt"};
     auto constraints_path = std::filesystem::path{"../input/day16_constraints.txt"};
 
-    fmt::print("Part one: {}\n", part_one(path, constraints_path));
-    fmt::print("Part two: {}\n", part_two(path, constraints_path));
+    std::vector<Constraint> constraints = read_constrains(lines_from_file(constraints_path));
+    std::vector<std::vector<int>> tickets = read_tickets(lines_from_file(nearby_path));
+
+    auto [total, valids] = valid_tickets(tickets, constraints);
+
+    fmt::print("Part one: {}\n", total);
+    fmt::print("Part two: {}\n", part_two(valids, constraints));
 }
