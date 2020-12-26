@@ -27,7 +27,7 @@ Progress:
 13 ** (part two solved in python) 
 14 *
 15 **
-16 *
+16 ** 
 17 **
 18 **
 19 *
