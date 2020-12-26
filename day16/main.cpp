@@ -84,7 +84,7 @@ uint64_t part_two(std::vector<std::vector<int>>& tickets, std::vector<Constraint
     std::string your_ticket = "83,137,101,73,67,61,103,131,151,127,113,107,109,89,71,139,167,97,59,53";
     auto this_ticket = read_ticket(your_ticket);
 
-    std::unordered_set<size_t> matchers{};
+    std::set<size_t> matchers{};
     for (size_t ic = 0; ic < constraints.size(); ic++) {
         matchers.insert(ic);
     }
@@ -93,9 +93,9 @@ uint64_t part_two(std::vector<std::vector<int>>& tickets, std::vector<Constraint
 
     while (!matchers.empty()) {
         for (size_t column = 0; column < this_ticket.size(); column++) {
-            std::unordered_set<size_t> these_matchers = matchers;
+            std::set<size_t> these_matchers = matchers;
             for (auto &ticket : tickets) {
-                std::unordered_set<size_t> m{};
+                std::set<size_t> m{};
                 for (auto c : these_matchers) {
                     if (constraints.at(c).matches(ticket.at(column))) {
                         m.insert(c);
