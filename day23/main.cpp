@@ -7,7 +7,7 @@
 #include <fmt/core.h>
 #include <fmt/ranges.h>
 
-std::list<int>::iterator next_with_wrap(std::list<int>& list, std::list<int>::iterator it) {
+std::list<size_t>::iterator next_with_wrap(std::list<size_t>& list, std::list<size_t>::iterator it) {
     it = std::next(it);
     if (it == list.end()) {
         return list.begin();
@@ -15,7 +15,11 @@ std::list<int>::iterator next_with_wrap(std::list<int>& list, std::list<int>::it
     return it;
 }
 
-void play(std::list<int>& cups, size_t moves) {
+/**
+ * Original solution included for completeness
+ */
+[[maybe_unused]]
+void play(std::list<size_t>& cups, size_t moves) {
     int current = *cups.begin();
     auto cur = cups.begin();
     int max = *std::max_element(cups.begin(), cups.end());
@@ -25,7 +29,7 @@ void play(std::list<int>& cups, size_t moves) {
         if (round % 1000 == 0) {
             fmt::print("Round {}\n", round);
         }
-        std::list<int> this_range{};
+        std::list<size_t> this_range{};
 
         // remove next 3
         auto cur1 = next_with_wrap(cups, cur);
@@ -72,45 +76,73 @@ void play(std::list<int>& cups, size_t moves) {
 
 /**
  *
- * TODO: array where index is cup value and value is next pointer in said array
+ * Solution inspired by reddit:
+ * Array where index is cup value and value at index is next in said array
  */
-
-void play2(std::vector<int>& cups, int starting, size_t moves) {
+std::vector<size_t> play2(std::vector<size_t> cups, size_t moves) {
+    size_t min = 1;
+    size_t max = cups.size() - 1;
     for (size_t round = 0; round < moves; round++) {
         // remove next 3
+        size_t current = cups.at(0);
+        size_t nxt = cups.at(current);
+        size_t nxt2 = cups.at(nxt);
+        size_t nxt3 = cups.at(nxt2);
 
         // select destination
+        size_t destination = current;
+        do {
+            if (destination == min) {
+                destination = max;
+            } else {
+                destination -= 1;
+            }
+        }
+        while (destination == nxt || destination == nxt2 || destination == nxt3);
+
         // insert immediately clockwise
+        cups.at(current) = cups.at(nxt3);
+        size_t destination_next = cups.at(destination);
+        cups.at(destination) = nxt;
+        cups.at(nxt3) = destination_next;
+
         // select new current
+        cups.at(0) = cups.at(current);
     }
+    return cups;
+}
+
+std::string part_one_sol(std::vector<size_t>&& cups) {
+    std::string res;
+    size_t current = cups.at(1);
+    while (current != 1) {
+        res += current + '0';
+        current = cups.at(current);
+    }
+    return res;
 }
 
 int main() {
-    //                        1  2  3  4  5  6  7  8 9
-    std::vector<int> cups2 = {0, 7, 3, 8, 1, 6, 5, 2, 4};
+    // original: 583976241      c  1  2  3  4  5  6  7  8  9
+    std::vector<size_t> cups = {5, 5, 4, 9, 1, 8, 2, 6, 3, 7};
 
-    //                     0  1  2  3  4  5  6  7  8
-    std::list<int> cups = {5, 8, 3, 9, 7, 6, 2, 4, 1};
-    //                     4  7  2  8  6  5  1  3  0
+    // example: 389125467     c  1  2  3  4  5  6  7  8  9
+    std::vector<size_t> ex = {3, 2, 5, 8, 6, 4, 7, 3, 9, 1};
 
-    play2(cups2, 5, 100);
+    fmt::print("Part one: {}\n", part_one_sol(play2(ex, 100)));
 
-    play(cups, 100);
-    // 24987653
-    fmt::print("Part one: {}\n", cups);
+    std::vector<size_t> cups_ext = cups;
+    cups_ext.at(1) = 10;
+    for (size_t i = 10; i < 1'000'000; i++) {
+        cups_ext.push_back(i + 1);
+    }
+    cups_ext.push_back(5);
+    assert(cups_ext.size() == 1000001);
 
-//    std::list<int> cups_ext = {3,8,9,1,2,5,4,6,7};
-//    for (int n = 10; n < 1'000'000; n++) {
-//        cups_ext.push_back(n);
-//    }
-//
-//    play(cups_ext, 10'000'000);
-//
-//    auto one = std::find(cups_ext.begin(), cups_ext.end(), 1);
-//    one = next_with_wrap(cups_ext, one);
-//    int first = *one;
-//    one = next_with_wrap(cups_ext, one);
-//    int second = *one;
-//
-//    fmt::print("Part two: {}\n", first * second);
+    auto z = play2(cups_ext, 10'000'000);
+
+    uint64_t first = z.at(1);
+    uint64_t second = z.at(first);
+
+    fmt::print("Part two: {} * {} = {}\n", first, second, first * second);
 }
