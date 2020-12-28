@@ -6,7 +6,6 @@
 #include <numeric>
 
 #include <fmt/core.h>
-#include <fmt/ranges.h>
 #include <ctre.h>
 #include "utils.h"
 
