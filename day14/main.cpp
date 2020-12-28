@@ -6,6 +6,7 @@
 #include <numeric>
 
 #include <fmt/core.h>
+#include <fmt/ranges.h>
 #include <ctre.h>
 #include "utils.h"
 
@@ -41,12 +42,14 @@ std::vector<int64_t> masked_address(std::string& mask, int64_t address) {
 
     for(int64_t i = 0; i < pow(2, xs.size()); i++) {
         int64_t this_address = address;
-        for(int64_t j = 0; j < xs.size(); j++) {
-            int64_t bit = i & (one << j);
+        for(size_t bit_idx = 0; bit_idx < xs.size(); bit_idx++) {
+            int64_t bit = (i >> bit_idx) & 1;
             if (bit == 1) {
-                this_address |= one << xs.at(j);
+                this_address |= one << xs.at(bit_idx);
             } else if (bit == 0) {
-                this_address &= ~(one << xs.at(j));
+                this_address &= ~(one << xs.at(bit_idx));
+            } else {
+                assert(0 && "bit should be 0 or 1!");
             }
         }
         addresses.push_back(this_address);
@@ -111,7 +114,6 @@ int64_t part_two(std::vector<std::string>& lines) {
 
 int main() {
     auto path = std::filesystem::path{"../input/day14.txt"};
-
     auto lines = lines_from_file(path);
 
     fmt::print("Part one: {}\n", part_one(lines));
