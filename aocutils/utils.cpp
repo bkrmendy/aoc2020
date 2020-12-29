@@ -3,6 +3,7 @@
 //
 
 #include <fstream>
+#include <sstream>
 #include "./utils.h"
 
 std::vector<std::string> lines_from_file(std::filesystem::path& path) {
@@ -37,4 +38,18 @@ std::vector<std::string> split(const std::string& str, const std::string& delimi
 
     return res;
 }
+
+std::vector<std::string> blocks_from_file(std::filesystem::path& path, std::string split_on) {
+    std::vector<std::string> lines{};
+    std::ifstream input{path};
+    std::stringstream buffer;
+
+    buffer << input.rdbuf();
+
+    auto s = std::move(buffer.str());
+
+    return split(s, split_on);
+}
+
+
 
