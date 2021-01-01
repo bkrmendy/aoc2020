@@ -11,7 +11,7 @@
 #include <ctre.h>
 #include <fmt/core.h>
 
-#include "utils.h"
+#include "aocutils.h"
 
 class Constraint {
     int u1;

@@ -6,7 +6,7 @@
 #include <exception>
 
 #include <fmt/core.h>
-#include "utils.h"
+#include "aocutils.h"
 
 enum class OpCode {
     Nop,

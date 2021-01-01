@@ -6,7 +6,7 @@
 #include <map>
 
 #include <fmt/core.h>
-#include "utils.h"
+#include "aocutils.h"
 
 int main() {
     auto path = std::filesystem::path{"../input/day21.txt"};

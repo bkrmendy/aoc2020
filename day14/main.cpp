@@ -7,7 +7,7 @@
 
 #include <fmt/core.h>
 #include <ctre.h>
-#include "utils.h"
+#include "aocutils.h"
 
 int64_t masked_value(std::string& mask, int64_t value) {
     for (size_t i = 0; i < 36; i++) {

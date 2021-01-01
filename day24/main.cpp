@@ -7,7 +7,7 @@
 #include <map>
 
 #include <fmt/core.h>
-#include "utils.h"
+#include "aocutils.h"
 
 enum Direction {
     East,       // e

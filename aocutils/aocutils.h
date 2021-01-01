@@ -2,8 +2,8 @@
 // Created by Berci on 2020. 12. 01..
 //
 
-#ifndef AOC2020_UTILS_H
-#define AOC2020_UTILS_H
+#ifndef AOC2020_AOCUTILS_H
+#define AOC2020_AOCUTILS_H
 
 #include <vector>
 #include <set>
@@ -79,4 +79,4 @@ Value at_with_default(std::unordered_map<Key, Value, Hash>& map, Key key, Value 
 
 std::vector<std::string> split(const std::string& str, const std::string& delimiter);
 
-#endif //AOC2020_UTILS_H
+#endif //AOC2020_AOCUTILS_H

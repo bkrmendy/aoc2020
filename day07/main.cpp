@@ -9,7 +9,7 @@
 #include <numeric>
 
 #include <fmt/core.h>
-#include "../aocutils/utils.h"
+#include "../aocutils/aocutils.h"
 
 struct Entry {
     int quantity;

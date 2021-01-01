@@ -3,7 +3,7 @@
 //
 
 #include <fmt/core.h>
-#include "utils.h"
+#include "aocutils.h"
 
 uint64_t search(uint64_t pk) {
     uint64_t subject_number = 7;

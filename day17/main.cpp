@@ -8,7 +8,7 @@
 #include <algorithm>
 
 #include <fmt/core.h>
-#include "utils.h"
+#include "aocutils.h"
 
 using Crd3 = std::tuple<int, int, int>;
 using Crd4 = std::tuple<int, int, int, int>;

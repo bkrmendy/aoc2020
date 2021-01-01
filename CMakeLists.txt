@@ -12,8 +12,8 @@ add_subdirectory(aocutils/fmt)
 
 add_library(aocutils
         ${utils_src}
-        aocutils/utils.h
-        aocutils/utils.cpp
+        aocutils/aocutils.h
+        aocutils/aocutils.cpp
 
         aocutils/overloaded.h
 
