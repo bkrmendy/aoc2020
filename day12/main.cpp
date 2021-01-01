@@ -6,7 +6,7 @@
 #include <cmath>
 
 #include <fmt/core.h>
-#include "utils.h"
+#include "aocutils.h"
 
 struct Move {
     char direction;

@@ -5,7 +5,7 @@
 #include <map>
 
 #include <fmt/core.h>
-#include "utils.h"
+#include "aocutils.h"
 
 int part_one(std::vector<int>& entries) {
     int last = 0;

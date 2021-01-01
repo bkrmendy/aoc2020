@@ -2,8 +2,8 @@
 // Created by Berci on 2020. 12. 01..
 //
 
-#ifndef AOC2020_UTILS_H
-#define AOC2020_UTILS_H
+#ifndef AOC2020_AOCUTILS_H
+#define AOC2020_AOCUTILS_H
 
 #include <vector>
 #include <set>
@@ -29,7 +29,7 @@ std::vector<T> entries_from_file(std::filesystem::path& path, std::function<T(co
 }
 
 template<typename T>
-std::set<T> intersection(std::vector<std::set<T>>& sets) {
+std::set<T> set_intersection(std::vector<std::set<T>>& sets) {
     if (sets.empty()) {
         return std::set<T>{};
     }
@@ -61,20 +61,22 @@ std::set<T> difference(std::set<T>& left, std::set<T>& right) {
 
 template<typename Key, typename Value>
 Value at_with_default(std::map<Key, Value>& map, Key key, Value def) {
-    if (map.contains(key)) {
+    try {
         return map.at(key);
+    } catch(std::exception& e) {
+        return def;
     }
-    return def;
 }
 
 template<typename Key, typename Value, typename Hash>
 Value at_with_default(std::unordered_map<Key, Value, Hash>& map, Key key, Value def) {
-    if (map.contains(key)) {
+    try {
         return map.at(key);
+    } catch(std::exception& e) {
+        return def;
     }
-    return def;
 }
 
 std::vector<std::string> split(const std::string& str, const std::string& delimiter);
 
-#endif //AOC2020_UTILS_H
+#endif //AOC2020_AOCUTILS_H

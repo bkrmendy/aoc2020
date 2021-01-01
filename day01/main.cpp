@@ -3,7 +3,7 @@
 #include <vector>
 #include <numeric>
 
-#include "utils.h"
+#include "aocutils.h"
 #include <fmt/core.h>
 
 void part_one(std::vector<int>& numbers) {

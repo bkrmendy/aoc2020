@@ -4,7 +4,7 @@
 
 #include <fstream>
 #include <sstream>
-#include "./utils.h"
+#include "./aocutils.h"
 
 std::vector<std::string> lines_from_file(std::filesystem::path& path) {
     std::vector<std::string> lines{};

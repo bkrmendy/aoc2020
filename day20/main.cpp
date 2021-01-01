@@ -9,7 +9,7 @@
 #include <optional>
 
 #include <fmt/core.h>
-#include "utils.h"
+#include "aocutils.h"
 
 /*
  * Solution ported from https://github.com/encse/adventofcode/blob/master/2020/Day20/Solution.cs

@@ -7,7 +7,7 @@
 #include <numeric>
 #include <memory>
 
-#include "utils.h"
+#include "aocutils.h"
 #include <fmt/core.h>
 
 long to_number(long i) {

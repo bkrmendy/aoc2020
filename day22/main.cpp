@@ -7,7 +7,7 @@
 #include <tuple>
 
 #include <fmt/core.h>
-#include "utils.h"
+#include "aocutils.h"
 
 enum class Player {
     PlayerOne,

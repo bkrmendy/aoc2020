@@ -7,7 +7,7 @@
 #include <numeric>
 
 #include <fmt/core.h>
-#include "utils.h"
+#include "aocutils.h"
 
 std::vector<std::map<std::string, std::string>> batches(std::vector<std::string>& lines) {
     std::vector<std::map<std::string, std::string>> passports{};

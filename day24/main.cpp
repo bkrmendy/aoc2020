@@ -7,7 +7,8 @@
 #include <map>
 
 #include <fmt/core.h>
-#include "utils.h"
+#include "aocutils.h"
+#include "life.h"
 
 enum Direction {
     East,       // e
@@ -24,7 +25,6 @@ enum Side {
 };
 
 using Coordinate = std::pair<int, int>;
-using Map = std::map<Coordinate, Side>;
 
 std::vector<std::vector<Direction>> parse_instructions(std::vector<std::string>&& lines) {
     std::vector<std::vector<Direction>> instructions;
@@ -97,8 +97,14 @@ Coordinate move(Coordinate from, Direction direction) {
     assert(0 && "Unknown direction");
 }
 
-template<typename State>
-State next_state(State this_state, size_t active_neighbors) {
+template <>
+Side make_active_state() { return Side::Black; }
+
+template <>
+Side make_inactive_state() { return Side::White; }
+
+template<>
+Side next_state(const Side& this_state, size_t active_neighbors) {
     if (this_state == Side::Black
         && (active_neighbors == 0 || active_neighbors > 2)) {
         return Side::White;
@@ -111,7 +117,8 @@ State next_state(State this_state, size_t active_neighbors) {
 
 /// https://www.redblobgames.com/grids/hexagons/#neighbors-offset
 /// "odd-r"
-std::vector<Coordinate> neighbors_of(const Coordinate& coord) {
+template <>
+std::set<Coordinate> neighbors_of(const Coordinate& coord) {
     auto [row, column] = coord;
     if (row % 2 == 0) {
         return {
@@ -134,77 +141,20 @@ std::vector<Coordinate> neighbors_of(const Coordinate& coord) {
     }
 }
 
-template<typename Coord, typename State>
-std::vector<State> neighbors_of(std::map<Coord, State>& cubes, Coord coord) {
-    auto neighbors = neighbors_of(coord);
-    std::vector<State> states{};
-    std::transform(neighbors.begin(),
-                   neighbors.end(),
-                   std::back_inserter(states),
-                   [&cubes](const auto& c) { return at_with_default(cubes, c, Side::White); });
-    return states;
-}
-
-template<typename Coord, typename State>
-std::map<Coord, State> extend_neighbors(std::map<Coord, State>& cubes, State default_state) {
-    std::map<Coord, State> these_tiles{};
-    for (const auto& [coord, _] : cubes) {
-        const auto& neighbors = neighbors_of(coord);
-        these_tiles.insert(std::make_pair(coord, default_state));
-        for (const Coord& neighbor : neighbors) {
-            these_tiles.insert(std::make_pair(neighbor, default_state));
-        }
+size_t play(std::set<Coordinate>& tiles, size_t rounds) {
+    auto life = Life<Coordinate, Side>();
+    for (size_t round = 0; round < rounds; round++) {
+        tiles = life.step(tiles);
     }
-
-    for (const auto& [coord, state] : cubes) {
-        these_tiles.at(coord) = state;
-    }
-
-    return these_tiles;
-}
-
-template<typename T, typename State>
-std::map<T, State> step(std::map<T, State>& tiles) {
-    std::map<T, State> these_cubes = tiles;
-    for (const auto& [coord, state] : tiles) {
-        auto neighbors = neighbors_of(tiles, coord);
-        auto actives = std::count_if(neighbors.begin(),
-                                     neighbors.end(),
-                                     [](auto state) { return state == Side::Black; });
-
-        these_cubes.at(coord) = next_state(state, actives);
-    }
-    return these_cubes;
-}
-
-template <typename Coord, typename S>
-int play(std::map<Coord, S>& tiles, size_t rounds) {
-    for (size_t cycle = 0; cycle < rounds; cycle++) {
-        std::map<Coord, S> extended_tiles = extend_neighbors(tiles, Side::White);
-        tiles = step(extended_tiles);
-    }
-
-    return std::count_if(tiles.begin(),
-                         tiles.end(),
-                         [](auto& tile) {
-        auto& [_, state] = tile;
-        return state == Side::Black;
-    });
+    return tiles.size();
 }
 
 int main() {
     auto path = std::filesystem::path{"../input/day24.txt"};
     auto instructions = parse_instructions(lines_from_file(path));
 
-    auto n_blacks = [](Map& map) {
-        return std::count_if(map.begin(), map.end(), [](auto& entry) {
-            auto& [_, side] = entry;
-            return side == Side::Black;
-        });
-    };
-
     /// part one
-    Map tiles{};
+    std::set<Coordinate> tiles{};
     for (const auto& sequence : instructions) {
         auto coord = Coordinate{0, 0};
 
@@ -213,16 +163,12 @@ int main() {
         }
 
         if (!tiles.contains(coord)) {
-            tiles.emplace(coord, Side::Black);
+            tiles.insert(coord);
         } else {
-            auto side = tiles.at(coord);
-            tiles.at(coord) = side == Side::White ? Side::Black : Side::White;
+            tiles.erase(coord);
         }
     }
 
-    fmt::print("Part one: {}\n", n_blacks(tiles));
-
-    /// part two
-    play(tiles, 100);
-    fmt::print("Part two: {}\n", n_blacks(tiles));
+    fmt::print("Part one: {}\n", tiles.size());
+    fmt::print("Part two: {}\n", play(tiles, 100));
 }

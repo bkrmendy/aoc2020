@@ -5,7 +5,7 @@
 #include <filesystem>
 
 #include <fmt/core.h>
-#include "utils.h"
+#include "aocutils.h"
 
 int is_occupied(int row, int column, std::vector<std::string>& lines) {
     if (row < 0

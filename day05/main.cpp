@@ -8,7 +8,7 @@
 #include <numeric>
 
 #include <fmt/core.h>
-#include "utils.h"
+#include "aocutils.h"
 
 int partition_rows(size_t rows_min, size_t rows_max, std::string&& bsp) {
     if (bsp.size() == 1) {

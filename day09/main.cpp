@@ -6,7 +6,7 @@
 
 #include <fmt/core.h>
 #include <set>
-#include "utils.h"
+#include "aocutils.h"
 
 long part_one(std::vector<long>& entries) {
     size_t preamble_length = 25;
