@@ -4,7 +4,7 @@
 
 [ ] Webassembly compiler for handheld console
 
-[ ] Generic Game of Life framework
+[x] Generic Game of Life framework
 
 [ ] Visualizer for 3D Game of Life
 
