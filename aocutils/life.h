@@ -6,6 +6,8 @@
 #define AOC2020_LIFE_H
 
 #include <set>
+#include <future>
+#include <vector>
 
 template <typename Coord>
 std::set<Coord> neighbors_of(const Coord& coord);
@@ -21,7 +23,7 @@ State make_inactive_state();
 
 template <typename Coord, typename State>
 class Life {
-    State get_next_state(const std::set<Coord>& state, const Coord& coord, State current_state) {
+    State get_next_state(const std::set<Coord>& state, const Coord& coord, State current_state) const {
         std::set<Coord> neighbors = neighbors_of(coord);
         size_t n_actives = std::count_if(neighbors.begin(),
                                          neighbors.end(),
