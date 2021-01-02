@@ -151,12 +151,12 @@ HexLife::Container neighbors_of(const Coordinate& coord) {
     }
 }
 
-size_t play(HexLife::Container& tiles, size_t rounds) {
+size_t play(HexLife::Container& coords, size_t rounds) {
     auto life = Life<Coordinate, Side>();
     for (size_t round = 0; round < rounds; round++) {
-        tiles = life.step(tiles);
+        coords = life.step(coords);
     }
-    return tiles.size();
+    return coords.size();
 }
 
 int main() {

@@ -28,7 +28,8 @@ public:
 
 private:
     State get_next_state(const Container& state,
-                         const Coord& coord, State current_state) const {
+                         const Coord& coord,
+                         const State& current_state) const {
         Container neighbors = neighbors_of(coord);
         size_t n_actives = std::count_if(neighbors.begin(),
                                          neighbors.end(),
