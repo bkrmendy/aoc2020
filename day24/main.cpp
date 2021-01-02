@@ -3,8 +3,6 @@
 //
 
 #include <filesystem>
-#include <vector>
-#include <map>
 
 #include <fmt/core.h>
 #include "aocutils.h"
@@ -25,6 +23,16 @@ enum Side {
 };
 
 using Coordinate = std::pair<int, int>;
+
+namespace std {
+    template <>
+    struct hash<Coordinate> {
+        size_t operator()(Coordinate const &coordinate) const {
+            auto[x, y] = coordinate;
+            return x ^ y;
+        }
+    };
+}
 
 std::vector<std::vector<Direction>> parse_instructions(std::vector<std::string>&& lines) {
     std::vector<std::vector<Direction>> instructions;
@@ -97,6 +105,8 @@ Coordinate move(Coordinate from, Direction direction) {
     assert(0 && "Unknown direction");
 }
 
+using HexLife = Life<Coordinate, Side>;
+
 template <>
 Side make_active_state() { return Side::Black; }
 
@@ -118,7 +128,7 @@ Side next_state(const Side& this_state, size_t active_neighbors) {
 /// https://www.redblobgames.com/grids/hexagons/#neighbors-offset
 /// "odd-r"
 template <>
-std::set<Coordinate> neighbors_of(const Coordinate& coord) {
+HexLife::Container neighbors_of(const Coordinate& coord) {
     auto [row, column] = coord;
     if (row % 2 == 0) {
         return {
@@ -141,7 +151,7 @@ std::set<Coordinate> neighbors_of(const Coordinate& coord) {
     }
 }
 
-size_t play(std::set<Coordinate>& tiles, size_t rounds) {
+size_t play(HexLife::Container& tiles, size_t rounds) {
     auto life = Life<Coordinate, Side>();
     for (size_t round = 0; round < rounds; round++) {
         tiles = life.step(tiles);
@@ -154,7 +164,7 @@ int main() {
     auto instructions = parse_instructions(lines_from_file(path));
 
     /// part one
-    std::set<Coordinate> tiles{};
+    HexLife::Container tiles{};
     for (const auto& sequence : instructions) {
         auto coord = Coordinate{0, 0};
 

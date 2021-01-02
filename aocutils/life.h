@@ -5,12 +5,12 @@
 #ifndef AOC2020_LIFE_H
 #define AOC2020_LIFE_H
 
-#include <set>
+#include <unordered_set>
 #include <future>
 #include <vector>
 
 template <typename Coord>
-std::set<Coord> neighbors_of(const Coord& coord);
+std::unordered_set<Coord> neighbors_of(const Coord& coord);
 
 template <typename State>
 State next_state(const State& this_state, size_t n_active_neighbors);
@@ -23,8 +23,13 @@ State make_inactive_state();
 
 template <typename Coord, typename State>
 class Life {
-    State get_next_state(const std::set<Coord>& state, const Coord& coord, State current_state) const {
-        std::set<Coord> neighbors = neighbors_of(coord);
+public:
+    using Container = std::unordered_set<Coord>;
+
+private:
+    State get_next_state(const Container& state,
+                         const Coord& coord, State current_state) const {
+        Container neighbors = neighbors_of(coord);
         size_t n_actives = std::count_if(neighbors.begin(),
                                          neighbors.end(),
                                          [&state](const Coord& neighbor) { return state.contains(neighbor); });
@@ -32,8 +37,8 @@ class Life {
     };
 
 public:
-    std::set<Coord> step(const std::set<Coord>& state) {
-        std::set<Coord> new_state{};
+    Container step(const Container& state) {
+        Container new_state{};
         auto active_state = make_active_state<State>();
         auto inactive_state = make_inactive_state<State>();
 
