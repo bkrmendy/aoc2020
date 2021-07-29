@@ -1,0 +1,3 @@
+[submodule "aocutils/fmt"]
+	path = aocutils/fmt
+	url = https://github.com/fmtlib/fmt
